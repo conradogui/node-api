@@ -1,6 +1,10 @@
+import Fastify from 'fastify'
+import { produtoService } from './services/produtos.sevice.js'
+
+
 const PORT = 5005
 
-const fastify = require('fastify')({
+const fastify = Fastify({
   logger: false
 })
 
@@ -8,9 +12,15 @@ fastify.get('/', (request, reply) => {
   reply.send('Servidor rodando')
 })
 
-fastify.get('/produtos', (request, reply) => {
-    reply.send('Produtos')
-  })
+fastify.get('/produtos', produtoService.buscarProdutos)
+
+fastify.get('/produtos/:id', produtoService.buscarProdutosPorId)
+
+fastify.post('/produtos', produtoService.criarProduto)
+
+fastify.patch('/produtos/id', produtoService.atualizarProduto)
+
+fastify.delete('/produtos/id', produtoService.deletarProduto)
 
 fastify.listen({ port: PORT }, (err, address) => {
   if (err) throw err
